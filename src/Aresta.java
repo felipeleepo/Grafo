@@ -27,6 +27,18 @@ public class Aresta {
     public Vertice getFim() {
         return Fim;
     }
+
+    public void setInicio(Vertice Inicio) {
+        this.Inicio = Inicio;
+    }
+
+    public void setFim(Vertice Fim) {
+        this.Fim = Fim;
+    }
+
+    public void setCusto(Object Custo) {
+        this.Custo = Custo;
+    }
     
     @Override
     public String toString(){

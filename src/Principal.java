@@ -5,13 +5,13 @@ class Principal {
         g.AdicionarVertice("b");
         g.AdicionarVertice("c");
         g.AdicionarVertice("d");
-        g.AdicionarAresta("a", "b", 50);
+        g.AdicionarAresta("b", "d", 50);
         g.AdicionarAresta("b", "b", 20);
-        g.AdicionarAresta("b", "d", 20);
+        g.AdicionarAresta("b", "d", 50);
        // g.ImprimirVertices();
-       // g.ImprimirArestas();
+        g.ImprimirArestas();
         g.MatrizAdjacencia();
-        g.RemoverAresta("b", "b");
+       // g.RemoverAresta("b", "b", 50);
         g.MatrizAdjacencia();
     }
 }

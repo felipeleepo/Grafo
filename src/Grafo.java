@@ -3,16 +3,18 @@ import java.util.List;
 public class Grafo {
     List<Vertice> V;
     ArrayList<Aresta> A;
-
     public Grafo() {
         V = new ArrayList<Vertice>();
         A = new ArrayList<Aresta>();
     }
     /* ADICIONAR */
-    public void AdicionarVertice(Object valor){        
-        V.add(new Vertice(valor));
+    public void AdicionarVertice(Object valor){ 
         System.out.println("ADICIONAR VÉRTICE");
-        System.out.println(V.get(V.size()-1).toString());
+        if(ExisteVertice(valor) == null){
+            V.add(new Vertice(valor));
+            System.out.println(V.get(V.size()-1).toString());
+        }else
+            System.out.println("Vértice Existente");
     }
     
     public void AdicionarAresta(Object x, Object y, Object c){
@@ -23,8 +25,11 @@ public class Grafo {
             System.out.println("Primeiro Vértice não existe");            
         else if(Fim == null)
             System.out.println("Segundo Vértice não existe");
-        else{
-            A.add(new Aresta(Inicio, Fim, c));
+        else if(ExisteAresta(Inicio.getValor(), Fim.getValor(), c) != null){
+            System.out.println("Já Existe essa Aresta");
+        }else{            
+            Aresta a = new Aresta(Inicio, Fim, c);
+            A.add(a);
             System.out.println(A.get(A.size()-1).toString());
         }
     }
@@ -42,10 +47,10 @@ public class Grafo {
         System.out.println(op);
     }
     
-    public void RemoverAresta(Object v1, Object v2){
+    public void RemoverAresta(Object v1, Object v2, Object custo){
         System.out.println("REMOÇÃO ARESTA");
         String op = "Valor não Encontrado";
-        Aresta a = ExisteAresta(v1, v2);
+        Aresta a = ExisteAresta(v1, v2, custo);
         if(a != null){
             op = a.toString();
             A.remove(a);
@@ -62,9 +67,9 @@ public class Grafo {
         return null;
     }
     
-    public Aresta ExisteAresta(Object v1, Object v2){
+    public Aresta ExisteAresta(Object v1, Object v2, Object custo){
         for(Aresta a : this.A)
-            if(a.getInicioValor() == v1 && a.getFimValor() == v2)
+            if(a.getInicioValor() == v1 && a.getFimValor() == v2 && a.getCusto() == custo)
                 return a;
         return null;
     }
@@ -76,6 +81,16 @@ public class Grafo {
         return false;
     }
     /* FIM COMPARACAO*/
+    
+    /* CALCULO */
+    public int Adjacencia(Vertice i, Vertice j){
+        int total = 0;
+        for (Aresta a : A)
+            if((a.getInicio() == i && a.getFim() == j) || (a.getInicio() == j && a.getFim() == i))
+                total++;
+        return total;
+    }
+    /* FIM CALCULO */
     
     /* IMPRESSAO */
     public void ImprimirVertices(){
@@ -113,10 +128,7 @@ public class Grafo {
             for (Vertice j : V) {
                 if (V.indexOf(j) == 0)  
                     System.out.print(i.getValor() + "|");
-                if(ÉAdjacente(i,j))
-                    System.out.print("1|");
-                else
-                    System.out.print("0|");
+                System.out.print(Adjacencia(i, j) + "|");
             }
             System.out.println("");
         }
