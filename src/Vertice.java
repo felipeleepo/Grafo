@@ -1,16 +1,11 @@
 public class Vertice {
-    private Object Valor;
+    String Valor;
 
-    public Vertice(Object Valor) {
+    public Vertice(String Valor) {
         this.Valor = Valor;
     }
-
-    public Object getValor() {
-        return Valor;
-    }
-    
     @Override
     public String toString(){
-        return "V["+getValor()+"]";
+        return Valor;
     }
 }
