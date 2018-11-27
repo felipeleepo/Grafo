@@ -5,10 +5,11 @@ class Principal {
         g.AdicionarVertice();
         g.AdicionarVertice();
         g.AdicionarVertice();
-        g.AdicionarAresta("0", "0", 50);
-        g.AdicionarAresta("0", "0", 20);
-        g.AdicionarAresta("1", "4", 50);
-        g.ImprimirVertices();
+        g.AdicionarAresta("0", "1", 1);
+        g.AdicionarAresta("1", "3", 1);
+        g.AdicionarAresta("0", "2", 1);
+        g.AdicionarAresta("2", "3", 1);
+        /*g.ImprimirVertices();
         g.ImprimirArestas();
         g.SubstituirVertice("1", "4");
         g.SubstituirVertice("1", "4");
@@ -16,7 +17,8 @@ class Principal {
         g.MatrizIncidencia();
         g.SubstituirAresta("0", 100);
         //g.RemoverAresta("0", "0", 100);
-        g.ImprimirArestas();
+        g.ImprimirArestas();*/
         g.MatrizCusto();
+        g.Distancia("0", "3");
     }
 }

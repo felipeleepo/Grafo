@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
+import jdk.nashorn.internal.objects.NativeArray;
 public class Grafo {
     List<Vertice> V;
     ArrayList<Aresta> A;
@@ -77,9 +79,22 @@ public class Grafo {
         return null;
     }
     
+    public Aresta ExisteArestaSemCusto(Vertice v1, Vertice v2){
+        for(Aresta a : this.A)
+            if(a.Inicio == v1 && a.Fim == v2)
+                return a;
+        return null;
+    }
+    
+    public Aresta ExisteArestaNome(String nome){
+        for (Aresta a : A)
+            if(a.nome.equals(nome))
+                return a;
+        return null;
+    }
     public boolean ÉAdjacente(Vertice v1, Vertice v2){
         for (Aresta i : A)
-            if((i.Inicio == v1 && i.Fim == v2) || (i.Inicio == v2 && i.Fim == v1))
+            if((i.Inicio == v1 && i.Fim == v2))
                 return true;
         return false;
     }
@@ -100,6 +115,66 @@ public class Grafo {
             if((a.Inicio == i && a.Fim == j))
                 total += (Integer)a.Custo;
         return ""+total;
+    }
+    
+    public void Distancia(String inicio, String fim){
+        System.out.println("MENOR CAMINHO = v" + inicio + "->v" + fim );
+        Vertice Inicio = ExisteVertice(inicio);
+        Vertice Fim = ExisteVertice(fim);
+        if(Inicio == null || Fim == null){
+            System.out.println("Vértice(s) Inexiste(s)");
+        }else{
+            List<Caminho> Abertos = new ArrayList<Caminho>();
+            List<Caminho> Fechados = new ArrayList<Caminho>();
+            
+            Caminho CaminhoPai = new Caminho();
+            CaminhoPai.v = Inicio;
+            CaminhoPai.peso = FuncaoL(Inicio, Inicio);
+            CaminhoPai.Ant = null;
+            Abertos.add(CaminhoPai);
+            
+            while(!CaminhoPai.v.equals(Fim)){
+                List<Caminho> adjacentes = CaminhosAdjacentes(CaminhoPai);
+                for (int i = 1; i < adjacentes.size(); i++) {
+                    if(CaminhoPai.Ant != null)
+                        adjacentes.get(i).Ant.peso = CaminhoPai.Ant.peso + FuncaoL(CaminhoPai.v, adjacentes.get(i).v);
+                    else
+                        adjacentes.get(i).Ant.peso = FuncaoL(CaminhoPai.v, adjacentes.get(i).v);                    
+                    adjacentes.get(i).peso = adjacentes.get(i).Ant.peso;
+                    if(!Fechados.contains(adjacentes.get(i)))
+                        adjacentes.get(i).Ant = CaminhoPai;
+                    Abertos.add(adjacentes.get(i));
+                }
+                Fechados.add(CaminhoPai);
+                Abertos.remove(CaminhoPai);
+                
+                CaminhoPai = MenorCaminhoAdjacente(adjacentes);                
+            }
+            
+            Caminho aux = CaminhoPai;
+            int custo = 0;
+            String texto = "";
+            System.out.println("Caminho a Percorrer:");
+            while(aux != null){
+                custo += aux.peso;
+                if(aux.Ant == null)
+                    texto = aux.v.Valor + "["+aux.peso+"]" + texto;
+                else
+                    texto = " -> " + aux.v.Valor + "["+aux.peso+"]" + texto;
+                aux = aux.Ant;
+            }
+            System.out.println(texto + "\nCusto Total: " + custo);
+        }
+    }
+    
+    public int FuncaoL(Vertice I, Vertice F){
+        Aresta a = ExisteArestaSemCusto(I,F);
+        if (I == F)
+            return 0;
+        else if(a != null)
+            return (Integer)a.Custo;
+        else 
+            return 999;
     }
     /* FIM CALCULO */
     
@@ -254,4 +329,28 @@ public class Grafo {
         return result + custo + "|";
     }
     /* FIM EXTRA */
+
+    private List<Caminho> CaminhosAdjacentes(Caminho CaminhoPai) {
+        List<Caminho> l = new ArrayList<Caminho>();
+        for (Aresta a : A) {
+            if(CaminhoPai.v == a.Inicio){
+                Caminho c = new Caminho();
+                c.v = a.Fim;
+                c.Ant = CaminhoPai;
+                c.peso = (Integer)a.Custo;
+                l.add(c);
+            }            
+        }
+        return l;
+    }
+    
+    private Caminho MenorCaminhoAdjacente(List<Caminho> l){
+        int menor = 999;
+        Caminho c = l.get(0);
+        for (Caminho caminho : l) {
+            if(menor > caminho.peso)
+                c = caminho;
+        }
+        return c;
+    }
 }
